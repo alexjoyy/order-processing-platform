@@ -25,5 +25,5 @@ security:
     username: alexjoy
     password: change-me
   jwt:
-    secret: YWxleGpveS1vcmRlci1wbGF0Zm9ybS1zZWNyZXQta2V5LTEyMzQ1Njc4OTA=
+    secret: alexjoy-order-platform-secret-key-1234567890-super
     expiration-seconds: 3600

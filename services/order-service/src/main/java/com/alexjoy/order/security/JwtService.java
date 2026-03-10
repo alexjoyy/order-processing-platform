@@ -2,8 +2,8 @@ package com.alexjoy.order.security;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import java.nio.charset.StandardCharsets;
 import java.time.Instant;
 import java.util.Date;
 import javax.crypto.SecretKey;
@@ -20,7 +20,7 @@ public class JwtService {
       @Value("${security.jwt.secret}") String secret,
       @Value("${security.jwt.expiration-seconds}") long expirationSeconds
   ) {
-    this.signingKey = Keys.hmacShaKeyFor(Decoders.BASE64.decode(secret));
+    this.signingKey = Keys.hmacShaKeyFor(secret.getBytes(StandardCharsets.UTF_8));
     this.expirationSeconds = expirationSeconds;
   }
 
