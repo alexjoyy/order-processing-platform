@@ -1,6 +1,7 @@
 package com.alexjoy.inventory.service;
 
 import com.alexjoy.inventory.dto.ReserveInventoryRequest;
+import com.alexjoy.inventory.exception.ResourceNotFoundException;
 import com.alexjoy.inventory.model.InventoryItem;
 import com.alexjoy.inventory.repository.InventoryItemRepository;
 import org.springframework.stereotype.Service;
@@ -18,7 +19,7 @@ public class InventoryAppService {
   @Transactional
   public void reserve(ReserveInventoryRequest request) {
     InventoryItem item = inventoryItemRepository.findByProductCode(request.productCode())
-        .orElseThrow(() -> new IllegalArgumentException("Unknown product: " + request.productCode()));
+        .orElseThrow(() -> new ResourceNotFoundException("Unknown product: " + request.productCode()));
 
     if (item.getAvailableQuantity() < request.quantity()) {
       throw new IllegalStateException("Insufficient inventory for product: " + request.productCode());

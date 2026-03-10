@@ -11,6 +11,8 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.web.server.ResponseStatusException;
 
 @RestControllerAdvice
@@ -50,6 +52,30 @@ public class GlobalExceptionHandler {
   ) {
     String message = ex.getReason() != null ? ex.getReason() : ex.getStatusCode().toString();
     return build(HttpStatus.valueOf(ex.getStatusCode().value()), message, request);
+  }
+
+  @ExceptionHandler(ResourceNotFoundException.class)
+  public ResponseEntity<ApiError> handleNotFound(
+      ResourceNotFoundException ex,
+      HttpServletRequest request
+  ) {
+    return build(HttpStatus.NOT_FOUND, ex.getMessage(), request);
+  }
+
+  @ExceptionHandler(BadCredentialsException.class)
+  public ResponseEntity<ApiError> handleBadCredentials(
+      BadCredentialsException ex,
+      HttpServletRequest request
+  ) {
+    return build(HttpStatus.UNAUTHORIZED, "Invalid credentials", request);
+  }
+
+  @ExceptionHandler(AccessDeniedException.class)
+  public ResponseEntity<ApiError> handleAccessDenied(
+      AccessDeniedException ex,
+      HttpServletRequest request
+  ) {
+    return build(HttpStatus.FORBIDDEN, "Insufficient permissions", request);
   }
 
   @ExceptionHandler(IllegalArgumentException.class)

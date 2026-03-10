@@ -3,13 +3,12 @@ package com.alexjoy.order.service;
 import com.alexjoy.order.client.InventoryClient;
 import com.alexjoy.order.client.PaymentClient;
 import com.alexjoy.order.dto.CreateOrderRequest;
+import com.alexjoy.order.exception.ResourceNotFoundException;
 import com.alexjoy.order.model.Order;
 import com.alexjoy.order.model.OrderStatus;
 import com.alexjoy.order.repository.OrderRepository;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.server.ResponseStatusException;
 
 @Service
 public class OrderAppService {
@@ -58,6 +57,6 @@ public class OrderAppService {
 
   public Order getOrder(Long id) {
     return orderRepository.findById(id)
-        .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Order not found: " + id));
+        .orElseThrow(() -> new ResourceNotFoundException("Order not found: " + id));
   }
 }

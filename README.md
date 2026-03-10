@@ -50,12 +50,29 @@ cd "/Users/alexjoy/Documents/codex projects/order-processing-platform/services/o
 mvn spring-boot:run
 ```
 
+## Authentication (JWT)
+
+All business APIs are protected. Obtain a token first from any service:
+
+```bash
+curl -X POST http://localhost:8080/api/auth/token \
+  -H 'Content-Type: application/json' \
+  -d '{"username":"alexjoy","password":"change-me"}'
+```
+
+Copy `data.accessToken` from the response and export it:
+
+```bash
+export TOKEN="<paste-access-token>"
+```
+
 ## First Endpoints
 
 ### 1) Create an order
 
 ```bash
 curl -X POST http://localhost:8080/api/orders \
+  -H "Authorization: Bearer $TOKEN" \
   -H 'Content-Type: application/json' \
   -d '{
     "productCode": "JAVA-BOOK",
@@ -67,13 +84,14 @@ curl -X POST http://localhost:8080/api/orders \
 ### 2) Get order status
 
 ```bash
-curl http://localhost:8080/api/orders/1
+curl -H "Authorization: Bearer $TOKEN" http://localhost:8080/api/orders/1
 ```
 
 ### 3) Reserve inventory directly
 
 ```bash
 curl -X POST http://localhost:8081/api/inventory/reserve \
+  -H "Authorization: Bearer $TOKEN" \
   -H 'Content-Type: application/json' \
   -d '{"productCode":"SPRING-COURSE","quantity":1}'
 ```
@@ -82,6 +100,7 @@ curl -X POST http://localhost:8081/api/inventory/reserve \
 
 ```bash
 curl -X POST http://localhost:8082/api/payments/capture \
+  -H "Authorization: Bearer $TOKEN" \
   -H 'Content-Type: application/json' \
   -d '{"orderId": 101, "amount": 999.00}'
 ```
@@ -90,6 +109,5 @@ curl -X POST http://localhost:8082/api/payments/capture \
 
 - Add Kafka/RabbitMQ for async order events
 - Implement idempotency key support for create order
-- Add global exception handling with proper HTTP error codes
 - Add Testcontainers integration tests
 - Add OpenAPI docs and GitHub Actions CI

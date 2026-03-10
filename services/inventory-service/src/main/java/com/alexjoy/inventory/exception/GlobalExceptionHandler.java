@@ -7,10 +7,13 @@ import java.util.stream.Collectors;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.server.ResponseStatusException;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
@@ -47,7 +50,40 @@ public class GlobalExceptionHandler {
       IllegalArgumentException ex,
       HttpServletRequest request
   ) {
+    return build(HttpStatus.BAD_REQUEST, ex.getMessage(), request);
+  }
+
+  @ExceptionHandler(ResourceNotFoundException.class)
+  public ResponseEntity<ApiError> handleNotFound(
+      ResourceNotFoundException ex,
+      HttpServletRequest request
+  ) {
     return build(HttpStatus.NOT_FOUND, ex.getMessage(), request);
+  }
+
+  @ExceptionHandler(ResponseStatusException.class)
+  public ResponseEntity<ApiError> handleResponseStatus(
+      ResponseStatusException ex,
+      HttpServletRequest request
+  ) {
+    String message = ex.getReason() != null ? ex.getReason() : ex.getStatusCode().toString();
+    return build(HttpStatus.valueOf(ex.getStatusCode().value()), message, request);
+  }
+
+  @ExceptionHandler(BadCredentialsException.class)
+  public ResponseEntity<ApiError> handleBadCredentials(
+      BadCredentialsException ex,
+      HttpServletRequest request
+  ) {
+    return build(HttpStatus.UNAUTHORIZED, "Invalid credentials", request);
+  }
+
+  @ExceptionHandler(AccessDeniedException.class)
+  public ResponseEntity<ApiError> handleAccessDenied(
+      AccessDeniedException ex,
+      HttpServletRequest request
+  ) {
+    return build(HttpStatus.FORBIDDEN, "Insufficient permissions", request);
   }
 
   @ExceptionHandler(IllegalStateException.class)
