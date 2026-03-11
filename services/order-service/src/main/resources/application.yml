@@ -1,23 +1,23 @@
 server:
-  port: 8080
+  port: ${PORT:8080}
 
 spring:
   datasource:
-    url: jdbc:postgresql://localhost:5433/order_db
-    username: order_user
-    password: order_pass
+    url: ${DB_URL:jdbc:postgresql://localhost:5433/order_db}
+    username: ${DB_USERNAME:order_user}
+    password: ${DB_PASSWORD:order_pass}
   jpa:
     hibernate:
-      ddl-auto: update
+      ddl-auto: ${DDL_AUTO:update}
     properties:
       hibernate:
         format_sql: true
 
 client:
   inventory:
-    base-url: http://localhost:8081
+    base-url: ${INVENTORY_BASE_URL:http://localhost:8081}
   payment:
-    base-url: http://localhost:8082
+    base-url: ${PAYMENT_BASE_URL:http://localhost:8082}
 
 management:
   endpoints:
@@ -27,10 +27,10 @@ management:
 
 security:
   demo:
-    username: alexjoy
-    password: change-me
+    username: ${DEMO_USERNAME:alexjoy}
+    password: ${DEMO_PASSWORD:change-me}
   jwt:
-    secret: alexjoy-order-platform-secret-key-1234567890-super
-    expiration-seconds: 3600
+    secret: ${JWT_SECRET:alexjoy-order-platform-secret-key-1234567890-super}
+    expiration-seconds: ${JWT_EXP_SECONDS:3600}
   internal-client:
-    subject: order-service
+    subject: ${INTERNAL_CLIENT_SUBJECT:order-service}

@@ -1,18 +1,18 @@
 server:
-  port: 8081
+  port: ${PORT:8081}
 
 spring:
   datasource:
-    url: jdbc:postgresql://localhost:5434/inventory_db
-    username: inventory_user
-    password: inventory_pass
+    url: ${DB_URL:jdbc:postgresql://localhost:5434/inventory_db}
+    username: ${DB_USERNAME:inventory_user}
+    password: ${DB_PASSWORD:inventory_pass}
   jpa:
     defer-datasource-initialization: true
     hibernate:
-      ddl-auto: update
+      ddl-auto: ${DDL_AUTO:update}
   sql:
     init:
-      mode: always
+      mode: ${SQL_INIT_MODE:always}
 
 management:
   endpoints:
@@ -22,8 +22,8 @@ management:
 
 security:
   demo:
-    username: alexjoy
-    password: change-me
+    username: ${DEMO_USERNAME:alexjoy}
+    password: ${DEMO_PASSWORD:change-me}
   jwt:
-    secret: alexjoy-order-platform-secret-key-1234567890-super
-    expiration-seconds: 3600
+    secret: ${JWT_SECRET:alexjoy-order-platform-secret-key-1234567890-super}
+    expiration-seconds: ${JWT_EXP_SECONDS:3600}

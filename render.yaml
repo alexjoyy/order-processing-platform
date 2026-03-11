@@ -1,0 +1,90 @@
+services:
+  - type: web
+    name: order-service
+    runtime: docker
+    dockerfilePath: services/order-service/Dockerfile
+    plan: free
+    healthCheckPath: /actuator/health
+    envVars:
+      - key: DB_URL
+        fromDatabase:
+          name: order-db
+          property: connectionString
+      - key: DB_USERNAME
+        fromDatabase:
+          name: order-db
+          property: user
+      - key: DB_PASSWORD
+        fromDatabase:
+          name: order-db
+          property: password
+      - key: INVENTORY_BASE_URL
+        value: https://inventory-service.onrender.com
+      - key: PAYMENT_BASE_URL
+        value: https://payment-service.onrender.com
+      - key: JWT_SECRET
+        value: order-platform-shared-jwt-secret-change-in-render-dashboard
+      - key: DEMO_USERNAME
+        value: alexjoy
+      - key: DEMO_PASSWORD
+        sync: false
+
+  - type: web
+    name: inventory-service
+    runtime: docker
+    dockerfilePath: services/inventory-service/Dockerfile
+    plan: free
+    healthCheckPath: /actuator/health
+    envVars:
+      - key: DB_URL
+        fromDatabase:
+          name: inventory-db
+          property: connectionString
+      - key: DB_USERNAME
+        fromDatabase:
+          name: inventory-db
+          property: user
+      - key: DB_PASSWORD
+        fromDatabase:
+          name: inventory-db
+          property: password
+      - key: JWT_SECRET
+        value: order-platform-shared-jwt-secret-change-in-render-dashboard
+      - key: DEMO_USERNAME
+        value: alexjoy
+      - key: DEMO_PASSWORD
+        sync: false
+
+  - type: web
+    name: payment-service
+    runtime: docker
+    dockerfilePath: services/payment-service/Dockerfile
+    plan: free
+    healthCheckPath: /actuator/health
+    envVars:
+      - key: DB_URL
+        fromDatabase:
+          name: payment-db
+          property: connectionString
+      - key: DB_USERNAME
+        fromDatabase:
+          name: payment-db
+          property: user
+      - key: DB_PASSWORD
+        fromDatabase:
+          name: payment-db
+          property: password
+      - key: JWT_SECRET
+        value: order-platform-shared-jwt-secret-change-in-render-dashboard
+      - key: DEMO_USERNAME
+        value: alexjoy
+      - key: DEMO_PASSWORD
+        sync: false
+
+databases:
+  - name: order-db
+    plan: free
+  - name: inventory-db
+    plan: free
+  - name: payment-db
+    plan: free

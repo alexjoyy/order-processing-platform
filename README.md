@@ -2,6 +2,24 @@
 
 Starter microservices project for a backend portfolio case study.
 
+## Outcome
+
+- Built 3 independent backend services (`order`, `inventory`, `payment`) with JWT-secured APIs.
+- Implemented service-to-service orchestration for order processing with failure-safe status transitions.
+- Added consistent response/error envelopes for cleaner client integration.
+
+## Architecture
+
+```mermaid
+flowchart LR
+    C["Client"] --> O["order-service"]
+    O --> I["inventory-service"]
+    O --> P["payment-service"]
+    O --> ODB[("order-db")]
+    I --> IDB[("inventory-db")]
+    P --> PDB[("payment-db")]
+```
+
 ## Services
 
 - `order-service` (`:8080`): create order, orchestrate inventory + payment, get order status
@@ -105,9 +123,36 @@ curl -X POST http://localhost:8082/api/payments/capture \
   -d '{"orderId": 101, "amount": 999.00}'
 ```
 
+### Sample response (`POST /api/orders`)
+
+```json
+{
+  "timestamp": "2026-03-11T01:10:20+05:30",
+  "status": 201,
+  "message": "Order created",
+  "path": "/api/orders",
+  "data": {
+    "id": 1,
+    "productCode": "JAVA-BOOK",
+    "quantity": 2,
+    "amount": 499.0,
+    "status": "COMPLETED"
+  }
+}
+```
+
 ## Suggested Next Improvements
 
 - Add Kafka/RabbitMQ for async order events
 - Implement idempotency key support for create order
 - Add Testcontainers integration tests
 - Add OpenAPI docs and GitHub Actions CI
+
+## Deploy (Render)
+
+This repo includes `render.yaml` + Dockerfiles for service deployment.
+
+1. Connect this repository in Render using Blueprint deploy.
+2. Provision all services + databases from `render.yaml`.
+3. Set the same `JWT_SECRET` value in all three services.
+4. Update `INVENTORY_BASE_URL` and `PAYMENT_BASE_URL` in `order-service` to deployed URLs.

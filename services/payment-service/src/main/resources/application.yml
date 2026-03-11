@@ -1,14 +1,14 @@
 server:
-  port: 8082
+  port: ${PORT:8082}
 
 spring:
   datasource:
-    url: jdbc:postgresql://localhost:5435/payment_db
-    username: payment_user
-    password: payment_pass
+    url: ${DB_URL:jdbc:postgresql://localhost:5435/payment_db}
+    username: ${DB_USERNAME:payment_user}
+    password: ${DB_PASSWORD:payment_pass}
   jpa:
     hibernate:
-      ddl-auto: update
+      ddl-auto: ${DDL_AUTO:update}
 
 management:
   endpoints:
@@ -18,8 +18,8 @@ management:
 
 security:
   demo:
-    username: alexjoy
-    password: change-me
+    username: ${DEMO_USERNAME:alexjoy}
+    password: ${DEMO_PASSWORD:change-me}
   jwt:
-    secret: alexjoy-order-platform-secret-key-1234567890-super
-    expiration-seconds: 3600
+    secret: ${JWT_SECRET:alexjoy-order-platform-secret-key-1234567890-super}
+    expiration-seconds: ${JWT_EXP_SECONDS:3600}
