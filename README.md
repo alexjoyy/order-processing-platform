@@ -47,24 +47,24 @@ Each service has its own PostgreSQL database via Docker Compose.
 1. Start databases:
 
 ```bash
-cd "/Users/alexjoy/Documents/codex projects/order-processing-platform"
+cd order-processing-platform
 docker compose up -d
 ```
 
 2. Start each service in separate terminals:
 
 ```bash
-cd "/Users/alexjoy/Documents/codex projects/order-processing-platform/services/inventory-service"
+cd services/inventory-service
 mvn spring-boot:run
 ```
 
 ```bash
-cd "/Users/alexjoy/Documents/codex projects/order-processing-platform/services/payment-service"
+cd services/payment-service
 mvn spring-boot:run
 ```
 
 ```bash
-cd "/Users/alexjoy/Documents/codex projects/order-processing-platform/services/order-service"
+cd services/order-service
 mvn spring-boot:run
 ```
 
